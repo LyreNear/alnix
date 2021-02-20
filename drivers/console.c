@@ -1,3 +1,5 @@
+#include "console.h"
+
 // VGA buffer begins at 0xB8000
 static uint16_t *video_memory = (uint16_t *) 0xB8000;
 
