@@ -1,4 +1,5 @@
 #include "console.h"
+#include "common.h"
 
 // VGA buffer begins at 0xB8000
 static uint16_t *video_memory = (uint16_t *) 0xB8000;
@@ -10,8 +11,8 @@ static uint8_t cursor_y = 0;
 static void move_cursor() {
 	// 80 is the screen width
 	uint16_t cursorLocation = cursor_y * 80 + cursor_x;
-	
-	// 
+
+	//
 	outb(0x3D4, 14);					// tell VGA to set higher 8 bits of the cursor
 	outb(0x3D5, cursorLocation >> 8);	// set the higher 8 bits
 	outb(0x3D4, 15);					// tell VGA to set lower 8 bits of the cursor
@@ -26,7 +27,7 @@ void console_clear() {
 	for (i = 0; i < 80 * 25; i++) {
 		video_memory[i] = blank;
 	}
-	
+
 	cursor_x = 0;
 	cursor_y = 0;
 	move_cursor();
@@ -69,6 +70,7 @@ void console_putc_color(char c, real_color_t back, real_color_t fore) {
 		cursor_y++;
 	} else if (c >= ' ') {
 		video_memory[cursor_y * 80 + cursor_x] = c | attribute;
+        cursor_x++;
 	}
 
 	if (cursor_x >= 80) {
